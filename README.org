@@ -1,0 +1,17 @@
+* RedBaron4emacs
+
+Tests for python code manipulation (without rope).
+
+RedBaron: https://redbaron.readthedocs.org/en/latest/tuto.html
+
+** Motivation
+
+take the  string =def  foo(first, **kwargs, second=foo):  pass=, where
+the arguments are in a bad order, and sort them:
+
+: def foo(first, second=foo, **kwargs): pass
+
+Call that from within emacs, use with my snippet to add an argument to
+a function, and it becomes a bit simpler (no more movements around the
+code) and smarter (we manipulate =code=, not text with clunky regexps)
+to add an argument to a method.
