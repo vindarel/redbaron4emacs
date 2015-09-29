@@ -9,9 +9,10 @@ def rm_comma(arg):
 def arg_type(arg):
     return arg['type']
 
-# re-order
 def arg_lower(x, y):
-    """x, y: arg dicts
+    """Comparaison function, to sort arguments.
+
+    x, y: arg dicts
 
     types:
     - def_argument, comma, dict_argument
@@ -74,10 +75,16 @@ def reform_input(args, method="foo"):
     res = "def {}({}):".format(method, res)
     return res
 
-def main():
+def main(txt=""):
+    """be careful, txt must be valid python code.
 
-    txt = "def foo(first, **kwargs, second=foo): pass"
-    print "orig txt: \n", txt
+    example:
+    : def foo(arg): pass
+    """
+
+    if not txt:
+        txt = "def foo(first, **kwargs, second=foo): pass"
+    # print "orig txt: \n", txt
     red = RedBaron(txt)
 
     args = red.fst()[0]['arguments']
@@ -89,8 +96,12 @@ def main():
     args = sorted(args, cmp=arg_lower)
     # print args
     res = reform_input(args)
-    print "result: \n", res
-    return 0
+    return res
 
 if __name__ == "__main__":
-    exit(main())
+    import sys
+    if len(sys.argv) > 1:
+        main(txt=sys.argv[1])
+
+    else:
+        exit(main())
