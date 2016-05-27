@@ -30,6 +30,10 @@ def arg_lower(x, y):
         if ytype != 'def_argument':
             return X_LT
         else:
+            if x.get('target') and x.get('target').get('value') == 'self':
+                return X_LT
+            if y.get('target') and y.get('target').get('value') == 'self':
+                return X_GT
             # x, y are def_argument
             if not x.get('value'):
                 # just a simple argument
