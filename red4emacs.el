@@ -1,10 +1,26 @@
 
 (setq red4emacs-path "~/.emacs.d/my-elisp/redbaron4emacs/red4emacs.py")
 
+(defun current-line ()
+  "returns the current line."
+  ;; http://ergoemacs.org/emacs/elisp_all_about_lines.html
+         (let ( (p1 (line-beginning-position))
+                (p2 (line-end-position)))
+           (buffer-substring-no-properties p1 p2)
+           ))
+
+(defun current-line-indentation ()
+  "returns the str of the current indentation (spaces)."
+  ;; https://github.com/magnars/s.el#s-match-strings-all-regex-string
+  (car (car (s-match-strings-all "^\s+" (current-line)) ) ))
+
 (defun red4e-add-arg (arg)
   "Add an argument to the current method definition. Have it well sorted with redbaron."
   (interactive "sArgument? ")
   (let* ((args-list (-concat (my-py-get-function-args) (list arg)))
+         (indentation (save-excursion
+                        (python-nav-beginning-of-defun)
+                        (current-line-indentation)))
         (def (concat
               "def "
               ;; (which-function) ;; inconsistent with "name (def)"
@@ -15,7 +31,12 @@
                          args-list
                          ",")
               "): pass")))
-    (insert (shell-command-to-string (concat "python " red4emacs-path " '" def "'")))
+    (save-excursion
+      (python-nav-beginning-of-defun)
+      (beginning-of-line)
+      (kill-line)
+      (insert (concat indentation
+                      (s-trim (shell-command-to-string (concat "python " red4emacs-path " '" def "'"))))))
   ))
 
 (defun my-python-info-current-defun (&optional include-type)
