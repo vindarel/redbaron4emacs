@@ -4,6 +4,13 @@ Tests for python code manipulation (without rope).
 
 RedBaron: https://redbaron.readthedocs.org/en/latest/tuto.html
 
+** Usage
+
+Set the =red4emacs.py= path inside =red4emacs.el=.
+
+Inside  a function,  call  =M-x red4e-add-arg  RET  whatever RET=.  It
+replaces the method definition with a new one.
+
 ** Motivation
 
 take the  string =def  foo(first, **kwargs, second=foo):  pass=, where
