@@ -14,6 +14,18 @@
   ;; https://github.com/magnars/s.el#s-match-strings-all-regex-string
   (car (car (s-match-strings-all "^\s+" (current-line)) ) ))
 
+(defun my-py-get-function-args ()
+  "get a list of the method's arguments. They must be separated
+  by a comma followed by a space (this is dumb but the solidity is
+  considered satisfactory. As of today it will fail when arguments have parenthesis.). "
+  (interactive)
+  (save-excursion
+    (save-restriction
+      (beginning-of-defun)
+      (setq myfoo-str (my-string-matching  "(\\(.*\\))" (current-line) 1))
+      (s-split ", " myfoo-str)
+      ;; (message myfoo-str)
+)))
 (defun red4e-add-arg (arg)
   "Add an argument to the current method definition. Have it well sorted with redbaron."
   (interactive "sArgument? ")
