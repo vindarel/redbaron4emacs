@@ -1,15 +1,28 @@
 * RedBaron4emacs
 
-Tests for python code manipulation (without rope).
+POC  for python  code manipulation  with  a Full  Syntax Tree.  That's
+better than regexps. Without rope.
 
 RedBaron: https://redbaron.readthedocs.org/en/latest/tuto.html
 
-** Usage
+** Install
+
+: pip install redbaron
 
 Set the =red4emacs.py= path inside =red4emacs.el=.
 
+** Usage
+
+To see all options:
+: M-x red4e-hydra/body
+
+*** Add an argument
 Inside  a function,  call  =M-x red4e-add-arg  RET  whatever RET=.  It
 replaces the method definition with a new one.
+
+*** Rename an argument
+
+: M-x red4e-mv-arg
 
 ** Motivation
 

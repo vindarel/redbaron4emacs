@@ -67,6 +67,12 @@
 
     (red4e--write-args args)))
 
+(defhydra red4e-hydra (:color blue :columns 2)
+  "redbaron4emacs"
+  ("a" (call-interactively 'red4e-add-arg) "add an argument")
+  ("r" (call-interactively 'red4e-mv-arg) "rename an argument")
+  )
+
 (defun my-python-info-current-defun (&optional include-type)
   "Return name of surrounding function with Python compatible dotty syntax.
 Optional argument INCLUDE-TYPE indicates to include the type of the defun.
