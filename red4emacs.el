@@ -52,26 +52,8 @@
 (defun red4e-add-arg (arg)
   "Add an argument to the current method definition. Have it well sorted with redbaron."
   (interactive "sArgument? ")
-  (let* ((args-list (-concat (my-py-get-function-args) (list arg)))
-         (indentation (save-excursion
-                        (python-nav-beginning-of-defun)
-                        (current-line-indentation)))
-        (def (concat
-              "def "
-              ;; (which-function) ;; inconsistent with "name (def)"
-              ;; (python-info-current-defun) ;; no: includes class names
-              (my-python-info-current-defun)
-              "("
-              (mapconcat #'identity
-                         args-list
-                         ",")
-              "): pass")))
-    (save-excursion
-      (python-nav-beginning-of-defun)
-      (beginning-of-line)
-      (kill-line)
-      (insert (concat indentation
-                      (s-trim (shell-command-to-string (concat "python " red4emacs-path " '" def "'"))))))
+  (let* ((args-list (-concat (my-py-get-function-args) (list arg))))
+    (red4e--write-args args-list)
   ))
 
 (defun red4e-mv-arg ()
