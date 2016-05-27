@@ -2,6 +2,14 @@
 
 from redbaron import RedBaron
 
+"""First goal: add an argument to a method, not stupidly: sort them,
+i.e. put "self" first, put "**kwargs" last, put a named parameter
+after a simple one.
+
+Be an interface to emacs functions.
+
+"""
+# ideas: rm params (helm choice list), set this method static (rm self) (baron not needed)
 
 def rm_comma(arg):
     return arg.get('type') != 'comma'
@@ -20,6 +28,7 @@ def arg_lower(x, y):
     but in def_argument, we can have named arguments. That one has
     another dict for value.
 
+    TODO: if "else", then lower !
     """
     xtype = x.get('type')
     ytype = y.get('type')
@@ -79,7 +88,7 @@ def reform_input(args, method="foo"):
     res = "def {}({}):".format(method, res)
     return res
 
-def main(txt=""):
+def sort_arguments(txt=""):
     """be careful, txt must be valid python code.
 
     example:
@@ -96,7 +105,6 @@ def main(txt=""):
     # print map(arg_type, args)
     # print map(rm_comma, args)
     args = filter(rm_comma, args)
-
     args = sorted(args, cmp=arg_lower)
     # print args
     res = reform_input(args)
@@ -105,7 +113,8 @@ def main(txt=""):
 if __name__ == "__main__":
     import sys
     if len(sys.argv) > 1:
-        main(txt=sys.argv[1])
+        res = sort_arguments(txt=sys.argv[1])
+        print res
 
     else:
-        exit(main())
+        exit(sort_arguments())
