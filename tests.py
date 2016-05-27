@@ -16,9 +16,9 @@ class TestRed4Emacs(unittest.TestCase):
         self.assertTrue(out in txt)
 
     def test_order(self):
-        txt = "def foo(**kwargs, first): pass"
+        txt = "def rst(**kwargs, first): pass"
         out = sort_arguments(txt=txt)
-        self.assertEqual(out, "def foo(first, **kwargs):")
+        self.assertEqual(out, "def rst(first, **kwargs):")
 
         txt = "def foo(**kwargs, key=val): pass"
         out = sort_arguments(txt=txt)

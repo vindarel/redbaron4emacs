@@ -100,14 +100,15 @@ def sort_arguments(txt=""):
     # print "orig txt: \n", txt
     red = RedBaron(txt)
 
-    args = red.fst()[0]['arguments']
+    fst = red.fst()[0]
+    args = fst['arguments']
     # print "orig: ", args
     # print map(arg_type, args)
     # print map(rm_comma, args)
     args = filter(rm_comma, args)
     args = sorted(args, cmp=arg_lower)
     # print args
-    res = reform_input(args)
+    res = reform_input(args, method=fst['name'])
     return res
 
 if __name__ == "__main__":
