@@ -1,5 +1,11 @@
+;; redbaron4emacs
+;; python code manipulation and edition.
+;; Vindarel 2016
+;; https://gitlab.com/vindarel/redbaron4emacs
+;; wtf public license
 
-(setq red4emacs-path "~/.emacs.d/my-elisp/redbaron4emacs/red4emacs.py")
+(setq red4emacs-path (concat (file-name-directory (buffer-file-name))
+                             "red4emacs.py"))
 
 (defun current-line ()
   "returns the current line."
