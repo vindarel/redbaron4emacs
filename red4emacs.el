@@ -26,6 +26,29 @@
       (s-split ", " myfoo-str)
       ;; (message myfoo-str)
 )))
+
+(defun red4e--write-args (args)
+  "Write the given list of args inline."
+  (let* ((def (concat
+              "def "
+              (my-python-info-current-defun)
+              "("
+              (mapconcat #'identity
+                         args
+                         ",")
+              "): pass"))
+         (indentation (save-excursion
+                        (python-nav-beginning-of-defun)
+                        (current-line-indentation))))
+
+    (save-excursion
+      (python-nav-beginning-of-defun)
+      (beginning-of-line)
+      (kill-line)
+      (insert (concat indentation
+                      (s-trim (shell-command-to-string (concat "python " red4emacs-path " '" def "'"))))))
+    ))
+
 (defun red4e-add-arg (arg)
   "Add an argument to the current method definition. Have it well sorted with redbaron."
   (interactive "sArgument? ")
@@ -50,6 +73,17 @@
       (insert (concat indentation
                       (s-trim (shell-command-to-string (concat "python " red4emacs-path " '" def "'"))))))
   ))
+
+(defun red4e-mv-arg ()
+  "Select an argument to change"
+  (interactive)
+  (let* ((args-list (my-py-get-function-args))
+         (arg (ido-completing-read+ "Arg to change ? " args-list))
+         (new (read-from-minibuffer "Change to: " arg))
+         (args (-concat (-remove-item arg args-list)
+                        (list new))))
+
+    (red4e--write-args args)))
 
 (defun my-python-info-current-defun (&optional include-type)
   "Return name of surrounding function with Python compatible dotty syntax.
