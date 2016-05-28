@@ -28,6 +28,10 @@ class TestRed4Emacs(unittest.TestCase):
         correct = "def foo(first, key=val, **kwargs):"
         self.assertEqual(correct, sort_arguments(txt=txt))
 
+    def test_append_last(self):
+        txt = "def rst(one, two): pass"
+        correct = "def rst(one, two):"
+        self.assertEqual(correct, sort_arguments(txt=txt))
     def test_insert_last(self):
         txt = "def foo(self, key=val, second): pass"
         correct = "def foo(self, second, key=val):"
