@@ -73,10 +73,22 @@
 
     (red4e--write-args args)))
 
+(defun red4e-rename-method ()
+  "Rename the current method. No refacto. This doesn't even use redbaron."
+  (interactive)
+  (let* ((def (my-python-info-current-defun))
+         (name (read-from-minibuffer "Name ? " def)))
+    (save-excursion
+      (beginning-of-defun)
+      (forward-word)
+      (delete-region (point) (save-excursion (search-forward "(")))
+      (insert (concat " " name "(")))))
+
 (defhydra red4e-hydra (:color blue :columns 2)
   "redbaron4emacs"
   ("a" (call-interactively 'red4e-add-arg) "add an argument")
   ("r" (call-interactively 'red4e-mv-arg) "rename an argument")
+  ("d" (call-interactively 'red4e-rename-method) "rename the def")
   )
 
 (defun my-python-info-current-defun (&optional include-type)

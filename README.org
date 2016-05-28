@@ -1,7 +1,7 @@
 * RedBaron4emacs
 
 POC  for python  code manipulation  with  a Full  Syntax Tree.  That's
-better than regexps. Without rope.
+better than regexps.
 
 RedBaron: https://redbaron.readthedocs.org/en/latest/tuto.html
 
@@ -9,11 +9,11 @@ RedBaron: https://redbaron.readthedocs.org/en/latest/tuto.html
 
 : pip install redbaron
 
-Set the =red4emacs.py= path inside =red4emacs.el=.
+You optionnaly need =hydra.el=.
 
 ** Usage
 
-To see all options:
+The one command to know to see all options:
 : M-x red4e-hydra/body
 
 *** Add an argument
@@ -23,6 +23,10 @@ replaces the method definition with a new one.
 *** Rename an argument
 
 : M-x red4e-mv-arg
+
+*** Rename the current method
+
+: M-x red4e-rename-method
 
 ** Motivation
 
