@@ -36,10 +36,15 @@ class TestRed4Emacs(unittest.TestCase):
 
     def test_append_kw(self):
         txt = "def rst(one, two=None, three=['inlist']): pass"
-        correct = "def rst(one, two=None, three=[]):"
+        correct = "def rst(one, two=None, three=['inlist']):"
         self.assertEqual(correct, sort_arguments(txt=txt))
 
     def test_insert_last(self):
+        txt = "def foo(self, key=[], second): pass"
+        correct = "def foo(self, second, key=[]):"
+        self.assertEqual(correct, sort_arguments(txt=txt))
+
+    def test_simple_to_all(self):
         txt = "def foo(self, key=[], second): pass"
         correct = "def foo(self, second, key=[]):"
         self.assertEqual(correct, sort_arguments(txt=txt))

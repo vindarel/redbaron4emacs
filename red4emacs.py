@@ -1,6 +1,8 @@
 #! /usr/bin/env python
 
 from redbaron import RedBaron
+from toolz.itertoolz import interpose
+
 
 """First goal: add an argument to a method, not stupidly: sort them,
 i.e. put "self" first, put "**kwargs" last, put a named parameter
@@ -16,7 +18,6 @@ def rm_comma(arg):
 
 def put_commas(args):
     comma = {'first_formatting': [], 'type': 'comma', 'second_formatting': [{'type': 'space', 'value': ' '}]}
-    from toolz.itertoolz import interpose
     res = interpose(comma, args)
     return list(res)
 
@@ -55,11 +56,11 @@ def arg_lower(x, y):
                 # just a simple argument
                 return X_GT
             else:
-                if not y.get('value'):
-                    # x is more than a simple arg, y is simple.
-                    return X_GT
+                if not x.get('value'):
+                    # x is a simple arg, not a kw
+                    return X_LT
             # they're both named args
-            return X_LT
+            return X_GT
 
     if y.get('type') == 'def_argument':
         return X_GT
@@ -100,9 +101,9 @@ def sort_arguments(txt=""):
     # print map(arg_type, args)
     # print map(rm_comma, args)
     args = filter(rm_comma, args)
-    args = sorted(args, cmp=arg_lower)
+    sargs = sorted(args, cmp=arg_lower)
     # print args
-    res = reform_input(args, method=fst['name'])
+    res = reform_input(sargs, method=fst['name'])
     return res
 
 if __name__ == "__main__":
