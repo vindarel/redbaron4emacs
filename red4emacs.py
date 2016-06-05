@@ -14,6 +14,12 @@ Be an interface to emacs functions.
 def rm_comma(arg):
     return arg.get('type') != 'comma'
 
+def put_commas(args):
+    comma = {'first_formatting': [], 'type': 'comma', 'second_formatting': [{'type': 'space', 'value': ' '}]}
+    from toolz.itertoolz import interpose
+    res = interpose(comma, args)
+    return list(res)
+
 def arg_type(arg):
     return arg['type']
 
@@ -60,33 +66,20 @@ def arg_lower(x, y):
 
     print "we shouldn't get here !"
 
-def print_arg(arg):
-    # redbaron really doesn't have a method to re-build the input ?
-    if type(arg) == type("string"):
-        return arg
-
-    if arg.get('target'):
-        res = arg['target']['value']
-        if arg.get('value'):
-            res += "=" + print_arg(arg['value'])
-
-    elif arg.get('value'):
-        prefix = ""
-        if arg.get('type') == "dict_argument":
-            prefix = "**"
-        res = prefix + print_arg(arg.get('value'))
-    else:
-        print "woops, see again print_arg method."
-
-    return res
-
 def reform_input(args, method="foo"):
-    """re-give the string:
+    """Re-give the def repr.
 
-    def foo(args):
+    - args: a list of dicts, representing redbaron's arguments
+
+    - return: something like "def foo(args):" (without 'pass')
     """
-    res = ", ".join(map(print_arg, args))
-    res = "def {}({}):".format(method, res)
+    # https://redbaron.readthedocs.io/en/latest/nodes_reference.html#funcdefnode
+    args = put_commas(args)
+    newdef = "def {}(): pass".format(method)
+    red = RedBaron(newdef)
+    red[0].arguments = args
+    res = red.dumps().strip()
+    res = res.strip(" pass")
     return res
 
 def sort_arguments(txt=""):
