@@ -27,11 +27,18 @@
   (interactive)
   (save-excursion
     (save-restriction
-      (beginning-of-defun)
+      (red4e--beginning-of-defun-or-line)
       (setq myfoo-str (my-string-matching  "(\\(.*\\))" (current-line) 1))
       (s-split ", " myfoo-str)
       ;; (message myfoo-str)
 )))
+
+(defun red4e--beginning-of-defun-or-line ()
+  "Don't move to the precedent beginning of defun if we're already on one."
+  (unless (progn
+            (beginning-of-line-text)
+            (looking-at-p "def "))
+    (python-nav-beginning-of-defun)))
 
 (defun red4e--write-args (args)
   "Write the given list of args inline."
@@ -44,11 +51,11 @@
                          ",")
               "): pass"))
          (indentation (save-excursion
-                        (python-nav-beginning-of-defun)
+                        (red4e--beginning-of-defun-or-line)
                         (current-line-indentation))))
 
     (save-excursion
-      (python-nav-beginning-of-defun)
+      (red4e--beginning-of-defun-or-line)
       (beginning-of-line)
       (kill-line)
       (insert (concat indentation
