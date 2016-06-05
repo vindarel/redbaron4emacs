@@ -114,9 +114,10 @@ def sort_arguments(txt=""):
 
 if __name__ == "__main__":
     import sys
+    txt = "def foo(self, key=val, second): pass" # testing
     if len(sys.argv) > 1:
         res = sort_arguments(txt=sys.argv[1])
         print res
 
     else:
-        exit(sort_arguments())
+        exit(sort_arguments(txt=txt))
