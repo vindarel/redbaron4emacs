@@ -80,6 +80,14 @@
 
     (red4e--write-args args)))
 
+(defun red4e-rm-arg ()
+  "Select an argument to remove"
+  (interactive)
+  (let* ((args-list (my-py-get-function-args))
+         (arg (ido-completing-read+ "Arg to remove ? " args-list))
+         (args (-remove-item arg args-list)))
+    (red4e--write-args args)))
+
 (defun red4e-rename-method ()
   "Rename the current method. No refacto. This doesn't even use redbaron."
   (interactive)
@@ -91,11 +99,12 @@
       (delete-region (point) (save-excursion (search-forward "(")))
       (insert (concat " " name "(")))))
 
-(defhydra red4e-hydra (:color blue :columns 2)
+(defhydra red4e-hydra (:color blue :columns 4)
   "redbaron4emacs"
   ("a" (call-interactively 'red4e-add-arg) "add an argument")
-  ("r" (call-interactively 'red4e-mv-arg) "rename an argument")
-  ("d" (call-interactively 'red4e-rename-method) "rename the def")
+  ("m" (call-interactively 'red4e-mv-arg) "rename an argument")
+  ("r" (call-interactively 'red4e-rm-arg) "rm an argument")
+  ("n" (call-interactively 'red4e-rename-method) "rename the def")
   )
 
 (defun my-python-info-current-defun (&optional include-type)

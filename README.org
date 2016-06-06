@@ -3,13 +3,13 @@
 POC  for python  code manipulation  with  a Full  Syntax Tree.  That's
 better than regexps.
 
-RedBaron: https://redbaron.readthedocs.org/en/latest/tuto.html
+RedBaron: [[https://redbaron.readthedocs.org/en/latest/tuto.html][https://redbaron.readthedocs.org/en/latest/tuto.html]]
 
 ** Install
 
 : pip install redbaron
 
-You optionnaly need =hydra.el=.
+You optionnaly need =hydra.el=
 
 ** Usage
 
