@@ -16,6 +16,10 @@ You optionnaly need =hydra.el=
 The one command to know to see all options:
 : M-x red4e-hydra/body
 
+#+BEGIN_HTML
+ <img src="demo.gif" </img>
+#+END_HTML
+
 *** Add an argument
 Inside  a function,  call  =M-x red4e-add-arg  RET  whatever RET=.  It
 replaces the method definition with a new one.
