@@ -4,14 +4,14 @@ from redbaron import RedBaron
 from toolz.itertoolz import interpose
 
 
-"""First goal: add an argument to a method, not stupidly: sort them,
+"""
+First goal: add an argument to a method, not stupidly: sort them,
 i.e. put "self" first, put "**kwargs" last, put a named parameter
 after a simple one.
 
 Be an interface to emacs functions.
 
 """
-# ideas: rm params (helm choice list), set this method static (rm self) (baron not needed)
 
 def rm_comma(arg):
     return arg.get('type') != 'comma'
@@ -92,17 +92,12 @@ def sort_arguments(txt=""):
 
     if not txt:
         txt = "def foo(first, **kwargs, second=foo): pass"
-    # print "orig txt: \n", txt
     red = RedBaron(txt)
 
     fst = red.fst()[0]
     args = fst['arguments']
-    # print "orig: ", args
-    # print map(arg_type, args)
-    # print map(rm_comma, args)
     args = filter(rm_comma, args)
     sargs = sorted(args, cmp=arg_lower)
-    # print args
     res = reform_input(sargs, method=fst['name'])
     return res
 
