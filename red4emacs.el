@@ -137,12 +137,12 @@
       (red4e--replace-in-project def name)
       )))
 
-(defhydra red4e-hydra (:color blue :columns 4)
+(defhydra red4e-hydra (:color red :columns 4)
   "redbaron4emacs"
   ("a" (call-interactively 'red4e-add-arg) "add an argument")
-  ("m" (call-interactively 'red4e-mv-arg) "rename an argument")
-  ("r" (call-interactively 'red4e-rm-arg) "rm an argument")
-  ("n" (call-interactively 'red4e-rename-method) "rename the def")
+  ("r" (call-interactively 'red4e-mv-arg) "rename an argument")
+  ("d" (call-interactively 'red4e-rm-arg) "delete an argument")
+  ("f" (call-interactively 'red4e-rename-method) "rename the def")
   )
 
 (defun my-python-info-current-defun (&optional include-type)
