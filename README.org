@@ -28,6 +28,9 @@ replaces the method definition with a new one.
 
 : M-x red4e-mv-arg
 
+Renaming an argument will ask you  to search and replace it inside the
+method body.
+
 *** Rename the current method
 
 : M-x red4e-rename-method

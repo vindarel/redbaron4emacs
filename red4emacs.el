@@ -40,6 +40,12 @@
             (looking-at-p "def "))
     (python-nav-beginning-of-defun)))
 
+(defun red4e--beginning-of-defun-or-line-point ()
+  ""
+  (save-excursion
+    (red4e--beginning-of-defun-or-line)
+    (point)))
+
 (defun red4e--write-args (args)
   "Write the given list of args inline."
   (let* ((def (concat
@@ -62,6 +68,16 @@
                       (s-trim (shell-command-to-string (concat "python " red4emacs-path " '" def "'"))))))
     ))
 
+(defun red4e--replace-in-def (old new)
+  "Search and replace in current def"
+  (save-excursion
+    (let ((beg (red4e--beginning-of-defun-or-line-point))
+          (end (save-excursion
+                 (end-of-defun)
+                 (point))))
+      (query-replace old new nil beg end)
+      )))
+
 (defun red4e-add-arg (arg)
   "Add an argument to the current method definition. Have it well sorted with redbaron."
   (interactive "sArgument? ")
@@ -78,12 +94,15 @@
          (args (-concat (-remove-item arg args-list)
                         (list new))))
 
-    (red4e--write-args args)))
+    (red4e--write-args args)
+    (red4e--replace-in-def arg new)
+    ))
 
 (defun red4e-rm-arg ()
   "Select an argument to remove"
   (interactive)
   (let* ((args-list (my-py-get-function-args))
+         ;; (ido-separator "\n")
          (arg (ido-completing-read+ "Arg to remove ? " args-list))
          (args (-remove-item arg args-list)))
     (red4e--write-args args)))
