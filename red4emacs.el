@@ -78,6 +78,14 @@
       (query-replace old new nil beg end)
       )))
 
+(defun red4e--replace-in-buffer (old new)
+  "Search and replace in all current buffer"
+  (save-excursion
+    (let ((beg (point-min))
+          (end (point-max)))
+      (query-replace old new nil beg end)
+      )))
+
 (defun red4e-add-arg (arg)
   "Add an argument to the current method definition. Have it well sorted with redbaron."
   (interactive "sArgument? ")
@@ -116,7 +124,9 @@
       (beginning-of-defun)
       (forward-word)
       (delete-region (point) (save-excursion (search-forward "(")))
-      (insert (concat " " name "(")))))
+      (insert (concat " " name "("))
+      (red4e--replace-in-buffer def name)
+      )))
 
 (defhydra red4e-hydra (:color blue :columns 4)
   "redbaron4emacs"

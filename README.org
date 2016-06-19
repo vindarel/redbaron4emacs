@@ -35,6 +35,10 @@ method body.
 
 : M-x red4e-rename-method
 
+It will ask you to search and replace in the current buffer
+
+: TODO: real refactoring accross project
+
 ** Motivation
 
 take the  string =def  foo(first, **kwargs, second=foo):  pass=, where
