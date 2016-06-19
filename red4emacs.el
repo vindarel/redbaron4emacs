@@ -6,8 +6,8 @@
 
 (require 'projectile)
 
-(setq red4emacs-path (concat (file-name-directory (buffer-file-name))
-                             "red4emacs.py"))
+(setq red4emacs-path (concat (file-name-directory (or buffer-file-name load-file-name))
+                            "red4emacs.py")) ;; buffer-file-name for local eval, load-file-name for loading from somewhere else, when the buffer isn't open.
 
 (defun current-line ()
   "returns the current line."
