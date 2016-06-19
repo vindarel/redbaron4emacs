@@ -49,5 +49,25 @@ class TestRed4Emacs(unittest.TestCase):
         correct = "def foo(self, second, key=[]):"
         self.assertEqual(correct, sort_arguments(txt=txt))
 
+    def test_arg(self):
+        txt = "def foo(self, *arg, one): pass"
+        correct = "def foo(self, one, *arg):"
+        self.assertEqual(correct, sort_arguments(txt=txt))
+
+    def test_arg_kwargs(self):
+        txt = "def foo(self, **kwargs, *arg): pass"
+        correct = "def foo(self, *arg, **kwargs):"
+        self.assertEqual(correct, sort_arguments(txt=txt))
+
+    def test_arg_kwargs_all(self):
+        txt = "def foo(self, **kwargs, one, two=[], *arg): pass"
+        correct = "def foo(self, one, two=[], *arg, **kwargs):"
+        self.assertEqual(correct, sort_arguments(txt=txt))
+
+    def test_kwargs_into_arg(self):
+        txt = "def foo(self, *args, **kwargs): pass"
+        correct = "def foo(self, *args, **kwargs):"
+        self.assertEqual(correct, sort_arguments(txt=txt))
+
 if __name__ == "__main__":
     unittest.main()

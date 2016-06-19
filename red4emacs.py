@@ -24,6 +24,18 @@ def put_commas(args):
 def arg_type(arg):
     return arg['type']
 
+def list_argument(arg):
+    """
+    arg: full arg with key 'type'
+    """
+    return True if arg.get('type') == 'list_argument' else False
+
+def dict_argument(arg):
+    return True if arg.get('type') == 'dict_argument' else False
+
+def def_argument(arg):
+    return True if arg.get('type') == 'def_argument' else False
+
 def arg_lower(x, y):
     """Comparaison function, to sort arguments.
 
@@ -42,8 +54,8 @@ def arg_lower(x, y):
     X_LT = -1
     X_GT = 1
     EQ = 0
-    if xtype == 'def_argument':
-        if ytype != 'def_argument':
+    if def_argument(x):
+        if not def_argument(y):
             return X_LT
         else:
             # Both x and y are def_argument
@@ -62,10 +74,16 @@ def arg_lower(x, y):
             # they're both named args
             return X_GT
 
-    if y.get('type') == 'def_argument':
+    if def_argument(y):
         return X_GT
 
-    print "we shouldn't get here !"
+    if list_argument(x):
+        return X_LT
+
+    if dict_argument(x):
+        return X_GT
+
+    print "Sorting args: we shouldn't get here !"
 
 def reform_input(args, method="foo"):
     """Re-give the def repr.
