@@ -4,6 +4,8 @@
 ;; https://gitlab.com/vindarel/redbaron4emacs
 ;; wtf public license
 
+(require 'projectile)
+
 (setq red4emacs-path (concat (file-name-directory (buffer-file-name))
                              "red4emacs.py"))
 
