@@ -35,9 +35,8 @@ method body.
 
 : M-x red4e-rename-method
 
-It will ask you to search and replace in the current buffer
-
-: TODO: real refactoring accross project
+It will ask you to search and replace this method in the current project (based on
+[[https://github.com/bbatsov/projectile][projectile']]s =projectile-replace=).
 
 ** Motivation
 

@@ -86,6 +86,13 @@
       (query-replace old new nil beg end)
       )))
 
+(defun red4e--replace-in-project (old new)
+  "Interactively search and replace in project (as projectile)."
+  ;; see projectile's projectile-replace source
+  (let ((files (projectile-files-with-string old (projectile-project-root))))
+    (tags-query-replace old new nil (cons 'list files))
+    ))
+
 (defun red4e-add-arg (arg)
   "Add an argument to the current method definition. Have it well sorted with redbaron."
   (interactive "sArgument? ")
@@ -121,11 +128,11 @@
   (let* ((def (my-python-info-current-defun))
          (name (read-from-minibuffer "Name ? " def)))
     (save-excursion
-      (beginning-of-defun)
+      (red4e--beginning-of-defun-or-line-point)
       (forward-word)
       (delete-region (point) (save-excursion (search-forward "(")))
       (insert (concat " " name "("))
-      (red4e--replace-in-buffer def name)
+      (red4e--replace-in-project def name)
       )))
 
 (defhydra red4e-hydra (:color blue :columns 4)
