@@ -10,7 +10,8 @@ RedBaron: [[https://redbaron.readthedocs.org/en/latest/tuto.html][https://redbar
 This library is based on RedBaron:
 : pip install redbaron
 
-You (optionnaly) need =hydra.el= (in [[http://wikemacs.org/wiki/Melpa][Melpa]]).
+You need =hydra.el=  (in [[http://wikemacs.org/wiki/Melpa][Melpa]], that's optionnal but real handy) and
+helm (for =helm-imenu=).
 
 For the moment,  clone this repository and  load =red4emacs.el=. Doing
 so will set the  path to the python code that  lives alongside it (see
@@ -42,6 +43,11 @@ method body.
 
 It will ask you to search and replace this method in the current project (based on
 [[https://github.com/bbatsov/projectile][projectile']]s =projectile-replace=).
+
+*** Move around defs with helm-imenu
+
+The hydra has the =i= binding to call =helm-imenu=, so you can jump to
+another def and carry on using red4e.
 
 ** Motivation
 

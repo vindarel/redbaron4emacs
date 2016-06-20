@@ -143,6 +143,7 @@
   ("r" (call-interactively 'red4e-mv-arg) "rename an argument")
   ("d" (call-interactively 'red4e-rm-arg) "delete an argument")
   ("f" (call-interactively 'red4e-rename-method) "rename the def")
+  ("i" (helm-imenu) "imenu")
   )
 
 (defun my-python-info-current-defun (&optional include-type)
