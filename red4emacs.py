@@ -13,27 +13,40 @@ Be an interface to emacs functions.
 
 """
 
-def rm_comma(arg):
+def arg_type_no_comma(arg):
+    """The given arg is not a comma (used to filter).
+    """
     return arg.get('type') != 'comma'
 
-def put_commas(args):
+def interpose_commas(args):
+    """Interpose commas args in between the given list of args.
+    """
     comma = {'first_formatting': [], 'type': 'comma', 'second_formatting': [{'type': 'space', 'value': ' '}]}
     res = interpose(comma, args)
     return list(res)
 
 def arg_type(arg):
+    """Type of the arg.
+    """
     return arg['type']
 
 def list_argument(arg):
     """
     arg: full arg with key 'type'
+    - return: bool
     """
     return True if arg.get('type') == 'list_argument' else False
 
 def dict_argument(arg):
+    """
+    - return: bool
+    """
     return True if arg.get('type') == 'dict_argument' else False
 
 def def_argument(arg):
+    """
+    - return: bool
+    """
     return True if arg.get('type') == 'def_argument' else False
 
 def arg_lower(x, y):
@@ -46,14 +59,10 @@ def arg_lower(x, y):
 
     but in def_argument, we can have named arguments. That one has
     another dict for value.
-
-    TODO: if "else", then lower !
     """
-    xtype = x.get('type')
-    ytype = y.get('type')
     X_LT = -1
     X_GT = 1
-    EQ = 0
+
     if def_argument(x):
         if not def_argument(y):
             return X_LT
@@ -93,7 +102,7 @@ def reform_input(args, method="foo"):
     - return: something like "def foo(args):" (without 'pass')
     """
     # https://redbaron.readthedocs.io/en/latest/nodes_reference.html#funcdefnode
-    args = put_commas(args)
+    args = interpose_commas(args)
     newdef = "def {}(): pass".format(method)
     red = RedBaron(newdef)
     red[0].arguments = args
@@ -102,10 +111,14 @@ def reform_input(args, method="foo"):
     return res
 
 def sort_arguments(txt=""):
-    """be careful, txt must be valid python code.
+    """Txt (str): a valid python code of a def with arguments.
+
+    Be careful, txt must be valid python code.
 
     example:
     : def foo(arg): pass
+
+    - return: str (the def with sorted arguments).
     """
 
     if not txt:
@@ -114,7 +127,7 @@ def sort_arguments(txt=""):
 
     fst = red.fst()[0]
     args = fst['arguments']
-    args = filter(rm_comma, args)
+    args = filter(arg_type_no_comma, args)
     sargs = sorted(args, cmp=arg_lower)
     res = reform_input(sargs, method=fst['name'])
     return res

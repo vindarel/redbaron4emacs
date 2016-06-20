@@ -7,9 +7,14 @@ RedBaron: [[https://redbaron.readthedocs.org/en/latest/tuto.html][https://redbar
 
 ** Install
 
+This library is based on RedBaron:
 : pip install redbaron
 
-You optionnaly need =hydra.el=
+You (optionnaly) need =hydra.el= (in [[http://wikemacs.org/wiki/Melpa][Melpa]]).
+
+For the moment,  clone this repository and  load =red4emacs.el=. Doing
+so will set the  path to the python code that  lives alongside it (see
+=red4emacs-path=).
 
 ** Usage
 
