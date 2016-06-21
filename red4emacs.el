@@ -130,7 +130,7 @@
   (let* ((def (my-python-info-current-defun))
          (name (read-from-minibuffer "Name ? " def)))
     (save-excursion
-      (red4e--beginning-of-defun-or-line-point)
+      (red4e--beginning-of-defun-or-line)
       (forward-word)
       (delete-region (point) (save-excursion (search-forward "(")))
       (insert (concat " " name "("))
