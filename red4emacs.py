@@ -1,5 +1,7 @@
 #! /usr/bin/env python
 
+import argparse
+
 from redbaron import RedBaron
 from toolz.itertoolz import interpose
 
@@ -132,12 +134,42 @@ def sort_arguments(txt=""):
     res = reform_input(sargs, method=fst['name'])
     return res
 
+def replace_argument(txt, pos, new):
+    """
+    """
+    red = RedBaron(txt)
+    fst = red.fst()[0]
+    args  = fst['arguments']
+    args = filter(arg_type_no_comma, args)
+    args.pop(pos)
+    args.insert(pos, new)
+    res = reform_input(args, method=fst['name'])
+    return res
+
 if __name__ == "__main__":
     import sys
     txt = "def foo(self, key=val, second): pass" # testing
-    if len(sys.argv) > 1:
-        res = sort_arguments(txt=sys.argv[1])
-        print res
 
-    else:
-        exit(sort_arguments(txt=txt))
+    # Parsing command line args with the default module (instead of clize, click,...).
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--rename", action="store_true",
+                        help="rename an argument. Must set txt, pos and new")
+    parser.add_argument("--txt", help="a valid def line, like 'def foo(arg): pass'")
+    parser.add_argument("--pos", help="position of arg to change")
+    parser.add_argument("--new", help="new arg")
+
+    parser.add_argument("--sort", action="store_true",
+                        help="Sort the arguments by their type. Must have --txt")
+
+    args = parser.parse_args()
+
+    if args.rename:
+        args.txt = args.txt or txt
+
+        if args.pos and args.new:
+            exit(replace_argument(args.txt, int(args.pos), args.new))
+
+    elif args.sort:
+        args.txt = args.txt or txt
+        res = sort_arguments(args.txt)
+        exit(res)

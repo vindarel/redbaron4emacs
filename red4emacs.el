@@ -70,7 +70,7 @@
       (beginning-of-line)
       (kill-line)
       (insert (concat indentation
-                      (s-trim (shell-command-to-string (concat "python " red4emacs-path " '" def "'"))))))
+                      (s-trim (shell-command-to-string (format "python %s --sort --txt '%s' " red4emacs-path def))))))
     ))
 
 (defun red4e--replace-in-def (old new)
@@ -98,6 +98,18 @@
     (tags-query-replace old new nil (cons 'list files))
     ))
 
+(defun red4e--current-def-txt ()
+  "Get the current def line, return valid code (adds 'pass')"
+  (save-excursion
+    (red4e--beginning-of-defun-or-line)
+    (concat (buffer-substring-no-properties
+             (red4e--beginning-of-defun-or-line-point)
+             (save-excursion
+               (end-of-line)
+               (point)))
+            " pass")
+    ))
+
 (defun red4e-add-arg (arg)
   "Add an argument to the current method definition. Have it well sorted with redbaron."
   (interactive "sArgument? ")
@@ -105,18 +117,40 @@
     (red4e--write-args args-list)
   ))
 
+(defun red4e--do-rename-arg (def argpos new)
+  "Rename an argument. Call python function.
+   - def: string, valid code 'def <name>(<args>): pass'
+   - argpos: nb, position of the arg
+   - new: new arg
+  "
+  (shell-command-to-string (format "python %s --rename --txt '%s' --pos %s --new %s" red4emacs-path def argpos new))
+  )
+
 (defun red4e-rename-arg ()
   "Select an argument to change"
   (interactive)
+  ;; Get the arguments list
   (let* ((args-list (my-py-get-function-args))
+         ;; Choose which arg to modify
          (arg (if (equal (length args-list) 1)
                   (-first-item args-list)
                 (ido-completing-read+ "Arg to change ? " args-list)))
+         ;; arg position
+         (argpos (-elem-index arg args-list))
+         ;; Ask for the modif
          (new (read-from-minibuffer "New value: " arg))
-         (args (-concat (-remove-item arg args-list)
-                        (list new))))
+         ;; Build a new list of args
+         (def (red4e--current-def-txt))
+         ;; Call redbaron to replace the arg, get the new def
+         (newdef (s-trim (red4e--do-rename-arg def argpos new))))
 
-    (red4e--write-args args)
+    ;; Write the new signature
+    (save-excursion
+      (red4e--beginning-of-defun-or-line)
+      (kill-line)
+      (insert newdef))
+
+    ;; Search and replace the old arg inside the methode.
     (red4e--replace-in-def arg new)
     ))
 
@@ -157,15 +191,6 @@
       (save-buffer)
       (red4e--replace-in-project def name)
       )))
-
-(defhydra red4e-hydra (:color red :columns 4)
-  "redbaron4emacs"
-  ("a" (call-interactively 'red4e-add-arg) "add an argument")
-  ("r" (call-interactively 'red4e-rename-arg) "rename an argument")
-  ("d" (call-interactively 'red4e-rm-arg) "delete an argument")
-  ("f" (call-interactively 'red4e-rename-method) "rename the def")
-  ("i" (helm-imenu) "imenu")
-  )
 
 (defun my-python-info-current-defun (&optional include-type)
   "Return name of surrounding function with Python compatible dotty syntax.
@@ -231,4 +256,13 @@ not inside a defun."
         (and names
              (concat (and type (format "%s " type))
                      (mapconcat 'identity names ".")))))))
+
+(defhydra red4e-hydra (:color red :columns 4)
+  "redbaron4emacs"
+  ("a" (call-interactively 'red4e-add-arg) "add an argument")
+  ("r" (call-interactively 'red4e-rename-arg) "rename an argument")
   ("S" (red4e-rename-symbol-in-defun) "rename a symbol inside this method")
+  ("d" (call-interactively 'red4e-rm-arg) "delete an argument")
+  ("f" (call-interactively 'red4e-rename-method) "rename the def")
+  ("i" (helm-imenu) "imenu")
+  )
