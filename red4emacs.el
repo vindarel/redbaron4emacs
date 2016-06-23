@@ -4,6 +4,7 @@
 ;; https://gitlab.com/vindarel/redbaron4emacs
 ;; wtf public license
 
+(require 'dash)
 (require 'projectile)
 
 (setq red4emacs-path (concat (file-name-directory (or buffer-file-name load-file-name))
@@ -25,7 +26,9 @@
 (defun my-py-get-function-args ()
   "get a list of the method's arguments. They must be separated
   by a comma followed by a space (this is dumb but the solidity is
-  considered satisfactory. As of today it will fail when arguments have parenthesis.). "
+  considered satisfactory. As of today it will fail when arguments have parenthesis.).
+
+  That can be done with redbaron."
   (interactive)
   (save-excursion
     (save-restriction
@@ -102,12 +105,14 @@
     (red4e--write-args args-list)
   ))
 
-(defun red4e-mv-arg ()
+(defun red4e-rename-arg ()
   "Select an argument to change"
   (interactive)
   (let* ((args-list (my-py-get-function-args))
-         (arg (ido-completing-read+ "Arg to change ? " args-list))
-         (new (read-from-minibuffer "Change to: " arg))
+         (arg (if (equal (length args-list) 1)
+                  (-first-item args-list)
+                (ido-completing-read+ "Arg to change ? " args-list)))
+         (new (read-from-minibuffer "New value: " arg))
          (args (-concat (-remove-item arg args-list)
                         (list new))))
 
@@ -140,7 +145,7 @@
 (defhydra red4e-hydra (:color red :columns 4)
   "redbaron4emacs"
   ("a" (call-interactively 'red4e-add-arg) "add an argument")
-  ("r" (call-interactively 'red4e-mv-arg) "rename an argument")
+  ("r" (call-interactively 'red4e-rename-arg) "rename an argument")
   ("d" (call-interactively 'red4e-rm-arg) "delete an argument")
   ("f" (call-interactively 'red4e-rename-method) "rename the def")
   ("i" (helm-imenu) "imenu")

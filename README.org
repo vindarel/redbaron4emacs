@@ -32,7 +32,7 @@ replaces the method definition with a new one.
 
 *** Rename an argument
 
-: M-x red4e-mv-arg
+: M-x red4e-rename-arg
 
 Renaming an argument will ask you  to search and replace it inside the
 method body.
