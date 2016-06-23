@@ -76,7 +76,10 @@
 (defun red4e--replace-in-def (old new)
   "Search and replace in current def"
   (save-excursion
-    (let ((beg (red4e--beginning-of-defun-or-line-point))
+    (let ((beg (save-excursion
+                 (red4e--beginning-of-defun-or-line)
+                 (next-line)
+                 (point)))
           (end (save-excursion
                  (end-of-defun)
                  (point))))
