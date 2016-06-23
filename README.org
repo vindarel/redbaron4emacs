@@ -49,6 +49,9 @@ It will ask you to search and replace this method in the current project (based 
 The hydra has the =i= binding to call =helm-imenu=, so you can jump to
 another def and carry on using red4e.
 
+*** Rename a symbol inside the current defun
+=S= in the hydra. It's a simple search and replace inside the method body.
+
 ** Motivation
 
 take the  string =def  foo(first, **kwargs, second=foo):  pass=, where

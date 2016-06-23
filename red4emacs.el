@@ -120,6 +120,21 @@
     (red4e--replace-in-def arg new)
     ))
 
+(defun red4e-rename-symbol-in-defun ()
+  "Rename any symbol (default: word at point) inside the current def."
+  (interactive)
+  (let* ((default (thing-at-point 'symbol))
+         (what (if (string-equal ""
+                                 (read-from-minibuffer (format "Replace: [%s]: " default)))
+                 default))
+         (with (read-from-minibuffer (format "Replace '%s' with: " what)))
+         (beg (red4e--beginning-of-defun-or-line-point))
+         (end (save-excursion
+                (end-of-defun)
+                (point))))
+    (query-replace what with nil beg end)
+    ))
+
 (defun red4e-rm-arg ()
   "Select an argument to remove"
   (interactive)
@@ -216,3 +231,4 @@ not inside a defun."
         (and names
              (concat (and type (format "%s " type))
                      (mapconcat 'identity names ".")))))))
+  ("S" (red4e-rename-symbol-in-defun) "rename a symbol inside this method")
