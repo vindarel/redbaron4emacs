@@ -139,6 +139,7 @@
       (forward-word)
       (delete-region (point) (save-excursion (search-forward "(")))
       (insert (concat " " name "("))
+      (save-buffer)
       (red4e--replace-in-project def name)
       )))
 
