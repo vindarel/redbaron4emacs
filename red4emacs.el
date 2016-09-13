@@ -5,7 +5,11 @@
 ;; wtf public license
 
 (require 'dash)
+(require 'm-buffer)
 (require 'projectile)
+(require 's)
+
+(defvar red4e--decorator-regexp "^\s*@[a-z_]*")
 
 (setq red4emacs-path (concat (file-name-directory
                               (or buffer-file-name
@@ -266,13 +270,74 @@ not inside a defun."
              (concat (and type (format "%s " type))
                      (mapconcat 'identity names ".")))))))
 
+
+(defun red4e--decorators ()
+  "Return a list of strings of all decorators used in this buffer.
+  "
+  (let ((results (m-buffer-match-string-no-properties
+                  (m-buffer-match (current-buffer) red4e--decorator-regexp))))
+    (--map (s-trim it)
+           (-distinct results))
+    ))
+
+(defun red4e--def-has-self ()
+  "Return t if the current def has the self argument."
+  (save-excursion
+    (beginning-of-defun)
+    (search-forward "(")
+    (looking-at-p "self")))
+
+(defun red4e--cleanup-self ()
+  "Remove 'self' from the method signature."
+  (save-excursion
+    (beginning-of-defun)
+    (search-forward "(")
+    (if (looking-at-p "self")
+        (delete-char 4))
+    (if (looking-at-p ",")
+        (delete-char 1))
+    (if (looking-at-p " ") ;; mmmh... better idea, without calling redbaron ?
+        (delete-char 1))
+    ))
+
+(defun red4e-decorator-add ()
+  "Ask for a decorator name (with or without the @) and add it
+  above the first def we encounter.
+
+  Suggest all already used decorators on this file (bypass the ido prompt with C-f).
+
+  If the new decorator is '@staticmethod', remove 'self' from the method signature.
+
+  This doesn't use redbaron.
+  "
+  (interactive)
+  (let* ((decorators-list (red4e--decorators))
+         (decorator (ido-completing-read+ "Decorator: " decorators-list))
+         (decorator (if (s-starts-with? "@" decorator)
+                     decorator
+                     (concat "@" decorator)))
+         (indentation (save-excursion
+                       (beginning-of-defun)
+                       (current-line-indentation))))
+    (save-excursion
+      (save-restriction
+        (beginning-of-defun)
+        (previous-line)
+        (insert (concat "\n" indentation decorator))
+        ))
+    (if (and (string-equal decorator "@staticmethod")
+             (red4e--def-has-self))
+        (red4e--cleanup-self))
+    (save-buffer))
+  )
 (defhydra red4e-hydra (:color red :columns 4)
   "redbaron4emacs"
   ("a" (call-interactively 'red4e-add-arg) "add an argument")
-  ("r" (red4e-rename-arg) "rename an argument")
+  ("n" (red4e-rename-arg) "rename an argument")
   ("S" (red4e-rename-symbol-in-defun) "rename a symbol inside this method")
-  ("d" (red4e-rm-arg) "delete an argument")
+  ("r" (red4e-rm-arg) "delete an argument")
   ("f" (red4e-rename-method) "rename the def")
   ("F" (red4e-rename-method-in-project) "rename the def in whole project")
+  ("d" (red4e-decorator-add) "Add a decorator")
   ("i" (helm-imenu) "imenu")
   )
