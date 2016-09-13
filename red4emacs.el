@@ -25,7 +25,7 @@
   ;; https://github.com/magnars/s.el#s-match-strings-all-regex-string
   (car (car (s-match-strings-all "^\s+" (current-line)) ) ))
 
-(defun my-py-get-function-args ()
+(defun red4e--get-function-args ()
   "get a list of the method's arguments. They must be separated
   by a comma followed by a space (this is dumb but the solidity is
   considered satisfactory. As of today it will fail when arguments have parenthesis.).
@@ -118,7 +118,7 @@
 (defun red4e-add-arg (arg)
   "Add an argument to the current method definition. Have it well sorted with redbaron."
   (interactive "sArgument? ")
-  (let* ((args-list (-concat (my-py-get-function-args) (list arg))))
+  (let* ((args-list (-concat (red4e--get-function-args) (list arg))))
     (red4e--write-args args-list)
   ))
 
@@ -135,7 +135,7 @@
   "Select an argument to change"
   (interactive)
   ;; Get the arguments list
-  (let* ((args-list (my-py-get-function-args))
+  (let* ((args-list (red4e--get-function-args))
          ;; Choose which arg to modify
          (arg (if (equal (length args-list) 1)
                   (-first-item args-list)
@@ -177,7 +177,7 @@
 (defun red4e-rm-arg ()
   "Select an argument to remove"
   (interactive)
-  (let* ((args-list (my-py-get-function-args))
+  (let* ((args-list (red4e--get-function-args))
          ;; (ido-separator "\n")
          (arg (ido-completing-read+ "Arg to remove ? " args-list))
          (args (-remove-item arg args-list)))
