@@ -40,9 +40,13 @@ method body.
 *** Rename the current method
 
 : M-x red4e-rename-method
+or
+: M-x red4e-rename-method-in-project
 
-It will ask you to search and replace this method in the current project (based on
-[[https://github.com/bbatsov/projectile][projectile']]s =projectile-replace=).
+Or =f= and =F= respectively with the hydra.
+
+The second  choice will ask you  to search and replace  this method in
+the current project (based on [[https://github.com/bbatsov/projectile][projectile']]s =projectile-replace=).
 
 *** Move around defs with helm-imenu
 
@@ -52,6 +56,20 @@ another def and carry on using red4e.
 *** Rename a symbol inside the current defun
 =S= in the hydra. It's a simple search and replace inside the method body.
 
+*** Add a decorator
+You can add a decorator to the current method:
+: M-x red4e-decorator-add
+
+Or =d= with the hydra.
+
+It will suggest  a list of decorators used in  the current buffer.  As
+usual,  you can  bypass the  ido prompt  with =C-f=  and type  another
+one. In that case, you can omit the "@".
+
+If we  choose "@staticmethod", then  it removes "self" from  the method
+signature.
+
+This function doesn't use the redbaron python library.
 ** Motivation
 
 take the  string =def  foo(first, **kwargs, second=foo):  pass=, where
