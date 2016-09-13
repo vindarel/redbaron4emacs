@@ -183,7 +183,7 @@
          (args (-remove-item arg args-list)))
     (red4e--write-args args)))
 
-(defun red4e-rename-method ()
+(defun red4e-rename-method (&optional in-project)
   "Rename the current method. No refacto. This doesn't even use redbaron."
   (interactive)
   (let* ((def (my-python-info-current-defun))
@@ -193,9 +193,13 @@
       (forward-word)
       (delete-region (point) (save-excursion (search-forward "(")))
       (insert (concat " " name "("))
-      (save-buffer)
-      (red4e--replace-in-project def name)
-      )))
+      (save-buffer))
+    (if in-project
+        (red4e--replace-in-project def name))))
+
+(defun red4e-rename-method-in-project ()
+  "Rename the current method, then use projectile to rename in whole project. Doesn't call redbaron."
+  (red4e-rename-method t))
 
 (defun my-python-info-current-defun (&optional include-type)
   "Return name of surrounding function with Python compatible dotty syntax.
@@ -265,9 +269,10 @@ not inside a defun."
 (defhydra red4e-hydra (:color red :columns 4)
   "redbaron4emacs"
   ("a" (call-interactively 'red4e-add-arg) "add an argument")
-  ("r" (call-interactively 'red4e-rename-arg) "rename an argument")
+  ("r" (red4e-rename-arg) "rename an argument")
   ("S" (red4e-rename-symbol-in-defun) "rename a symbol inside this method")
-  ("d" (call-interactively 'red4e-rm-arg) "delete an argument")
-  ("f" (call-interactively 'red4e-rename-method) "rename the def")
+  ("d" (red4e-rm-arg) "delete an argument")
+  ("f" (red4e-rename-method) "rename the def")
+  ("F" (red4e-rename-method-in-project) "rename the def in whole project")
   ("i" (helm-imenu) "imenu")
   )
