@@ -29,6 +29,12 @@
   ;; https://github.com/magnars/s.el#s-match-strings-all-regex-string
   (car (car (s-match-strings-all "^\s+" (current-line)) ) ))
 
+(defun my-string-matching (regexp str match)
+  "return the string matching the regexp."
+  ;; s-match-strings-all is similar.
+  (string-match regexp str)
+  (substring str (match-beginning match) (match-end match)))
+
 (defun red4e--get-function-args ()
   "get a list of the method's arguments. They must be separated
   by a comma followed by a space (this is dumb but the solidity is
@@ -39,10 +45,10 @@
   (save-excursion
     (save-restriction
       (red4e--beginning-of-defun-or-line)
-      (setq myfoo-str (my-string-matching  "(\\(.*\\))" (current-line) 1))
-      (s-split ", " myfoo-str)
+      (s-split ", "
+               (my-string-matching  "(\\(.*\\))" (current-line) 1) ))
       ;; (message myfoo-str)
-)))
+      ))
 
 (defun red4e--beginning-of-defun-or-line ()
   "Don't move to the precedent beginning of defun if we're already on one."
