@@ -9,7 +9,7 @@
 (require 'projectile)
 (require 's)
 
-(defvar red4e--decorator-regexp "^\s*@[a-z_]*")
+(defvar red4e--decorator-regexp "^\s*@[a-z_.]*")
 
 (setq red4emacs-path (concat (file-name-directory
                               (or buffer-file-name
