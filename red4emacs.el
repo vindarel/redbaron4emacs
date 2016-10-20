@@ -344,6 +344,6 @@ not inside a defun."
   ("r" (red4e-rm-arg) "delete an argument")
   ("f" (red4e-rename-method) "rename the def")
   ("F" (red4e-rename-method-in-project) "rename the def in whole project")
-  ("d" (red4e-decorator-add) "Add a decorator")
+  ("@" (red4e-decorator-add) "Add a decorator")
   ("i" (helm-imenu) "imenu")
   )
