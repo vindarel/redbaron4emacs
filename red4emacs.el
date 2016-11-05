@@ -36,19 +36,20 @@
   (substring str (match-beginning match) (match-end match)))
 
 (defun red4e--get-function-args ()
-  "get a list of the method's arguments. They must be separated
-  by a comma followed by a space (this is dumb but the solidity is
-  considered satisfactory. As of today it will fail when arguments have parenthesis.).
-
-  That can be done with redbaron."
+  "Get a list of the method's arguments.
+  Solidity considered ok. That could be done with redbaron.
+  Return a list of args (str)."
   (interactive)
   (save-excursion
     (save-restriction
       (red4e--beginning-of-defun-or-line)
-      (s-split ", "
-               (my-string-matching  "(\\(.*\\))" (current-line) 1) ))
-      ;; (message myfoo-str)
-      ))
+      (let* ((beg (progn
+                    (search-forward "(") (point)))
+             (end (progn
+                    (search-forward "):")
+                    (- (point) 2)))
+            (args (buffer-substring-no-properties beg end)))
+        (s-split ", " (s-collapse-whitespace args))))))
 
 (defun red4e--beginning-of-defun-or-line ()
   "Don't move to the precedent beginning of defun if we're already on one."
