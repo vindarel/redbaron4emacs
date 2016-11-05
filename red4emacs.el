@@ -348,3 +348,5 @@ not inside a defun."
   ("@" (red4e-decorator-add) "Add a decorator")
   ("i" (helm-imenu) "imenu")
   )
+
+(provide 'red4e)
