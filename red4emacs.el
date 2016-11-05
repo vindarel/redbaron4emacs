@@ -35,6 +35,17 @@
   (string-match regexp str)
   (substring str (match-beginning match) (match-end match)))
 
+(defun red4e-end-of-def ()
+  "Go to the end of the current 'def', according point is on its line."
+  (red4e--beginning-of-defun-or-line)
+  (search-forward "):"))
+
+(defun red4e-end-of-args-point ()
+  "Get point of the end of the definition of args."
+  (save-excursion
+    (red4e-end-of-def)
+    (- (point) 2)))
+
 (defun red4e--get-function-args ()
   "Get a list of the method's arguments.
   Solidity considered ok. That could be done with redbaron.
@@ -45,9 +56,7 @@
       (red4e--beginning-of-defun-or-line)
       (let* ((beg (progn
                     (search-forward "(") (point)))
-             (end (progn
-                    (search-forward "):")
-                    (- (point) 2)))
+             (end (red4e-end-of-args-point))
             (args (buffer-substring-no-properties beg end)))
         (s-split ", " (s-collapse-whitespace args))))))
 
@@ -65,7 +74,9 @@
     (point)))
 
 (defun red4e--write-args (args)
-  "Write the given list of args inline."
+  "Write the given list of args inline. 'args' can be in a wrong
+order. Thanks to RedBaron, we sort them correctly, preserving the
+initial order."
   (let* ((def (concat
               "def "
               (my-python-info-current-defun)
