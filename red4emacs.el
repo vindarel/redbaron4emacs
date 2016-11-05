@@ -92,7 +92,7 @@ initial order."
     (save-excursion
       (red4e--beginning-of-defun-or-line)
       (beginning-of-line)
-      (kill-line)
+      (kill-region (point) (red4e-end-of-args-point))
       (insert (concat indentation
                       (s-trim (shell-command-to-string (format "python %s --sort --txt '%s' " red4emacs-path def))))))
     ))
