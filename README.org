@@ -60,7 +60,7 @@ another def and carry on using red4e.
 You can add a decorator to the current method:
 : M-x red4e-decorator-add
 
-Or =d= with the hydra.
+Or =@= with the hydra.
 
 It will suggest  a list of decorators used in  the current buffer.  As
 usual,  you can  bypass the  ido prompt  with =C-f=  and type  another
