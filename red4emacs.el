@@ -35,7 +35,7 @@
   (string-match regexp str)
   (substring str (match-beginning match) (match-end match)))
 
-(defun red4e-end-of-def ()
+(defun red4e-end-of-args ()
   "Go to the end of the current 'def', according point is on its line."
   (red4e--beginning-of-defun-or-line)
   (search-forward "):"))
@@ -43,7 +43,7 @@
 (defun red4e-end-of-args-point ()
   "Get point of the end of the definition of args."
   (save-excursion
-    (red4e-end-of-def)
+    (red4e-end-of-args)
     (- (point) 2)))
 
 (defun red4e--get-function-args ()
@@ -57,7 +57,7 @@
       (let* ((beg (progn
                     (search-forward "(") (point)))
              (end (red4e-end-of-args-point))
-            (args (buffer-substring-no-properties beg end)))
+             (args (buffer-substring-no-properties beg end)))
         (s-split ", " (s-collapse-whitespace args))))))
 
 (defun red4e--beginning-of-defun-or-line ()
@@ -92,10 +92,55 @@ initial order."
     (save-excursion
       (red4e--beginning-of-defun-or-line)
       (beginning-of-line)
-      (kill-region (point) (red4e-end-of-args-point))
+      (kill-region (point) (save-excursion
+                             (red4e-end-of-args)
+                              (point)))
       (insert (concat indentation
                       (s-trim (shell-command-to-string (format "python %s --sort --txt '%s' " red4emacs-path def))))))
     ))
+
+(defun red4e-args-multi-line ()
+  "Write one argument per line. `multi-line' nor `fillcode' did the trick, but they could."
+  (interactive)
+  (let ((beg (save-excursion
+               (red4e--beginning-of-defun-or-line)
+               (point)))
+        (end (red4e-end-of-args-point)))
+    (save-excursion
+        (replace-regexp "," ",\n" nil beg end)
+        ;; and indent
+        (red4e--beginning-of-defun-or-line)
+        (forward-line)
+        (while (re-search-forward "," (red4e-end-of-args-point) t)
+          (indent-according-to-mode))
+        (forward-line)
+        (indent-according-to-mode)
+        )))
+
+(defun red4e-args-oneliner ()
+  "Write args in one line."
+  (interactive)
+  (let ((end (red4e-end-of-args-point)))
+    (save-excursion
+      (red4e--beginning-of-defun-or-line)
+      (replace-regexp "\n\s*" " " nil (point) end))))
+
+(defun red4e-args-on-one-line-p ()
+  "Return t if the args of the current defun are on one line only. Point can be anywhere in the method."
+  (let ((beg (save-excursion
+               (red4e--beginning-of-defun-or-line)
+               (line-number-at-pos)))
+        (end (save-excursion
+               (red4e-end-of-args)
+               (line-number-at-pos))))
+      (= beg end)))
+
+(defun red4e-args-multi-line-toggle ()
+  "Toggle args on one line / one many lines."
+  (interactive)
+  (if (red4e-args-on-one-line-p)
+        (red4e-args-multi-line)
+      (red4e-args-oneliner)))
 
 (defun red4e--replace-in-def (old new)
   "Search and replace in current def"
@@ -138,10 +183,14 @@ initial order."
     ))
 
 (defun red4e-add-arg (arg)
-  "Add an argument to the current method definition. Have it well sorted with redbaron."
+  "Add an argument to the current method definition. Have it well sorted with redbaron.
+
+If your args are on multiple lines, they will be written back in one. You'll need to manually call `red4e-args-multi-line' to put them back on multiple lines."
   (interactive "sArgument? ")
-  (let* ((args-list (-concat (red4e--get-function-args) (list arg))))
+  (let* ((args-list (-concat (red4e--get-function-args) (list arg)))
+         (args-one-line (red4e-args-on-one-line-p)))
     (red4e--write-args args-list)
+    (or args-one-line (red4e-args-multi-line))
   ))
 
 (defun red4e--do-rename-arg (def argpos new)
@@ -354,6 +403,7 @@ not inside a defun."
   ("n" (red4e-rename-arg) "rename an argument")
   ("S" (red4e-rename-symbol-in-defun) "rename a symbol inside this method")
   ("r" (red4e-rm-arg) "delete an argument")
+  ("l" (red4e-args-multi-line-toggle) "toggle args on multiple lines")
   ("f" (red4e-rename-method) "rename the def")
   ("F" (red4e-rename-method-in-project) "rename the def in whole project")
   ("@" (red4e-decorator-add) "Add a decorator")

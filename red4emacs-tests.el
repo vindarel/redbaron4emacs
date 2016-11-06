@@ -25,12 +25,20 @@
 ;;; Code:
 
 (require 'ert)
+(require 'dash)
+
 (load-file "red4emacs.el")
 (require 'red4e)
 
 (setq red4emacs-tests-input-one-liner "def foo(self, one, *args, **kwargs): pass")
 (setq red4emacs-tests-input-one-liner--argslist '("self" "one" "*args" "**kwargs"))
 
+(setq red4e-tests-input-multiline "def foo(self,
+one,
+*args,
+**kwargs): pass")
+
+;; Read args
 (ert-deftest test-get-args-one-liner ()
   (with-temp-buffer
     (insert red4emacs-tests-input-one-liner)
@@ -39,10 +47,7 @@
 
 (ert-deftest test-get-args-multiline ()
   (with-temp-buffer
-    (insert "def foo(self,
-one,
-*args,
-**kwargs): pass")
+    (insert red4e-tests-input-multiline)
     (should (equal (red4e--get-function-args)
                    red4emacs-tests-input-one-liner--argslist))))
 
@@ -51,3 +56,14 @@ one,
     (insert "def foo(): pass")
     (should (equal (red4e--get-function-args)
                    '("")))))
+
+;; Add arg
+(ert-deftest test-add-arg-multiline ()
+  (with-temp-buffer
+    (insert red4e-tests-input-multiline)
+    (python-mode)
+    (red4e-add-arg "three=three()")
+    (should (equal (red4e--get-function-args)
+                   (-insert-at 2 "three=three()" red4emacs-tests-input-one-liner--argslist)))
+    (should (equal nil
+                   (red4e-args-on-one-line-p)))))

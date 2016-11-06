@@ -30,6 +30,9 @@ The one command to know to see all options:
 Inside  a function,  call  =M-x red4e-add-arg  RET  whatever RET=.  It
 replaces the method definition with a new one.
 
+It respects args on many lines (well it isn't that clever, it's all in
+one line or each on its line).
+
 *** Rename an argument
 
 : M-x red4e-rename-arg
@@ -47,6 +50,14 @@ Or =f= and =F= respectively with the hydra.
 
 The second  choice will ask you  to search and replace  this method in
 the current project (based on [[https://github.com/bbatsov/projectile][projectile']]s =projectile-replace=).
+
+*** Write args in one line or in multiple lines
+
+: M-x red4e-args-multi-line-toggle
+
+or =l= on the hydra ("lines").
+
+_Note:_ see also [[https://github.com/IvanMalison/multi-line][multi-line]] and [[https://github.com/snarfed/fillcode][fillcode]].
 
 *** Move around defs with helm-imenu
 
