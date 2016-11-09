@@ -59,6 +59,10 @@ or =l= on the hydra ("lines").
 
 _Note:_ see also [[https://github.com/IvanMalison/multi-line][multi-line]] and [[https://github.com/snarfed/fillcode][fillcode]].
 
+*** Kill the whole current method
+
+=M-x red4e-method-kill= (experimental)
+
 *** Move around defs with helm-imenu
 
 The hydra has the =i= binding to call =helm-imenu=, so you can jump to

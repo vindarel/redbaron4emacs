@@ -397,6 +397,20 @@ not inside a defun."
         (red4e--cleanup-self))
     (save-buffer))
   )
+
+(defun red4e-method-kill ()
+  "Kill the current method definition and body."
+  (interactive)
+  (let ((beg (save-excursion
+               (red4e--beginning-of-defun-or-line)
+               (backward-paragraph)
+               (point)))
+        (end (save-excursion
+               (end-of-defun)
+               (point))))
+    (kill-region beg end)))
+
+
 (defhydra red4e-hydra (:color red :columns 4)
   "redbaron4emacs"
   ("a" (call-interactively 'red4e-add-arg) "add an argument")
@@ -406,6 +420,7 @@ not inside a defun."
   ("l" (red4e-args-multi-line-toggle) "toggle args on multiple lines")
   ("f" (red4e-rename-method) "rename the def")
   ("F" (red4e-rename-method-in-project) "rename the def in whole project")
+  ("K" (red4e-method-kill) "Kill method")
   ("@" (red4e-decorator-add) "Add a decorator")
   ("i" (helm-imenu) "imenu")
   )
