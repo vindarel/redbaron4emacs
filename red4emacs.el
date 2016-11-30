@@ -110,9 +110,10 @@ initial order."
         (replace-regexp "," ",\n" nil beg end)
         ;; and indent
         (red4e--beginning-of-defun-or-line)
-        (forward-line)
         (while (re-search-forward "," (red4e-end-of-args-point) t)
-          (indent-according-to-mode))
+          (progn
+            (forward-line)
+            (indent-according-to-mode)))
         (forward-line)
         (indent-according-to-mode)
         )))
