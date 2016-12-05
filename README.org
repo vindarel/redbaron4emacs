@@ -63,10 +63,16 @@ _Note:_ see also [[https://github.com/IvanMalison/multi-line][multi-line]] and [
 
 =M-x red4e-method-kill= (experimental)
 
-*** Move around defs with helm-imenu
+*** Move around defs with imenu
 
-The hydra has the =i= binding to call =helm-imenu=, so you can jump to
+The hydra has the =i= binding to call =imenu=, so you can jump to
 another def and carry on using red4e.
+
+As an  imenu frontend, you can  stick with the default  and very basic
+prompt (=completing-read=), or choose between *helm* and *ivy*:
+
+: (setq red4e-selection-ivy)
+: (setq red4e-selection-helm)
 
 *** Rename a symbol inside the current defun
 =S= in the hydra. It's a simple search and replace inside the method body.

@@ -9,6 +9,8 @@
 (require 'projectile)
 (require 's)
 
+(defvar red4e-selection-method 'red4e-selection-default "The selection method for imenu: default (completing-read), heml, counsel.")
+
 (defvar red4e--decorator-regexp "^\s*@[a-z_.]*")
 
 (setq red4emacs-path (concat (file-name-directory
@@ -411,6 +413,25 @@ not inside a defun."
                (point))))
     (kill-region beg end)))
 
+;; Methods for an imenu completion: basic, helm, counsel.
+(defun red4e-selection-default ()
+  "Default interface for an interactive completion method of
+imenu: the basic completing-read (imenu). Others choices are
+helm (helm-imenu) and ivy (counsel-imenu).
+
+Choose by setting `red4e-selection-method'."
+  ;; When possible, may be nice to put those choices in different files, like
+  ;; https://github.com/d12frosted/flyspell-correct
+  ;; see also https://www.emacswiki.org/emacs/idomenu.el ?
+  (call-interactively 'imenu))
+
+(defun red4e-selection-helm ()
+  "Helm interface for imenu."
+  (helm-imenu))
+
+(defun red4e-selection-ivy ()
+  "Ivy interface for imenu."
+  (counsel-imenu))
 
 (defhydra red4e-hydra (:color red :columns 4)
   "redbaron4emacs"
@@ -423,7 +444,7 @@ not inside a defun."
   ("F" (red4e-rename-method-in-project) "rename the def in whole project")
   ("K" (red4e-method-kill) "Kill method")
   ("@" (red4e-decorator-add) "Add a decorator")
-  ("i" (helm-imenu) "imenu")
+  ("i" (funcall red4e-selection-method) "imenu")
   )
 
 (provide 'red4e)
