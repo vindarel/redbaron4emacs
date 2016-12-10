@@ -9,7 +9,7 @@
 (require 'projectile)
 (require 's)
 
-(defvar red4e-selection-method 'red4e-selection-default "The selection method for imenu: default (completing-read), heml, counsel.")
+(defvar red4e-selection-method 'red4e-selection-default "The selection method for imenu: default (completing-read), helm, counsel.")
 
 (defvar red4e--decorator-regexp "^\s*@[a-z_.]*")
 
@@ -401,6 +401,23 @@ not inside a defun."
     (save-buffer))
   )
 
+(defun red4e-decorator-remove ()
+  "Remove a decorator (experimental)."
+  (interactive)
+  (save-excursion
+    (save-restriction
+      (beginning-of-defun)
+      (previous-line)
+      (if (s-starts-with? "@" (current-line))
+          (progn
+            (let ((deleted-line (current-line)))
+              (kill-line)
+              (kill-line)
+              (save-buffer)
+              (message (concat "Removed " deleted-line))))
+        (message "You don't have a decorator.")
+        ))))
+
 (defun red4e-method-kill ()
   "Kill the current method definition and body."
   (interactive)
@@ -444,6 +461,7 @@ Choose by setting `red4e-selection-method'."
   ("F" (red4e-rename-method-in-project) "rename the def in whole project")
   ("K" (red4e-method-kill) "Kill method")
   ("@" (red4e-decorator-add) "Add a decorator")
+  ("D" (red4e-decorator-remove) "Remove a decorator")
   ("i" (funcall red4e-selection-method) "imenu")
   )
 
