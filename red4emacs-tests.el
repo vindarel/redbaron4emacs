@@ -67,3 +67,27 @@ one,
                    (-insert-at 2 "three=three()" red4emacs-tests-input-one-liner--argslist)))
     (should (equal nil
                    (red4e-args-on-one-line-p)))))
+
+;; Add a decorator
+(ert-deftest red4e-test-decorator-add ()
+  (with-temp-buffer
+    (insert "\n") ;; or we're at beginning of buffer: xxx
+    (insert red4e-tests-input-multiline)
+    (python-mode)
+    (red4e--decorator-add "decotest")
+    (should (equal (red4e--decorator-read)
+                   "@decotest"))))
+
+;; Remove a decorator
+(ert-deftest red4e-test-decorator-remove ()
+  (with-temp-buffer
+    (insert "\n")
+    (insert "
+@one
+@two
+def foo():
+    pass
+")
+    (python-mode)
+    (should (equal (red4e--decorator-remove)
+                   "@two"))))

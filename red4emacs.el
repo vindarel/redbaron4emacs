@@ -370,6 +370,29 @@ not inside a defun."
         (delete-char 1))
     ))
 
+(defun red4e--decorator-add (decorator)
+  "Do add the decorator."
+  (let ((decorator (if (s-starts-with? "@" decorator)
+                     decorator
+                     (concat "@" decorator)))
+         (indentation (save-excursion
+                       (beginning-of-defun)
+                       (current-line-indentation))))
+
+    (save-excursion
+      (save-restriction
+        (beginning-of-defun)
+        (previous-line)
+        ;; and if there's a decorator already ?
+        (end-of-line)
+        (newline)
+        (insert (concat indentation decorator))
+        ))
+    (if (and (string-equal decorator "@staticmethod")
+             (red4e--def-has-self))
+        (red4e--cleanup-self)))
+    )
+
 (defun red4e-decorator-add ()
   "Ask for a decorator name (with or without the @) and add it
   above the first def we encounter.
@@ -382,41 +405,42 @@ not inside a defun."
   "
   (interactive)
   (let* ((decorators-list (red4e--decorators))
-         (decorator (ido-completing-read+ "Decorator: " decorators-list))
-         (decorator (if (s-starts-with? "@" decorator)
-                     decorator
-                     (concat "@" decorator)))
-         (indentation (save-excursion
-                       (beginning-of-defun)
-                       (current-line-indentation))))
-    (save-excursion
-      (save-restriction
-        (beginning-of-defun)
-        (previous-line)
-        (insert (concat "\n" indentation decorator))
-        ))
-    (if (and (string-equal decorator "@staticmethod")
-             (red4e--def-has-self))
-        (red4e--cleanup-self))
-    (save-buffer))
+         (decorator (ido-completing-read+ "Decorator: " decorators-list)))
+    (red4e--decorator-add decorator))
+  (save-buffer)
   )
 
-(defun red4e-decorator-remove ()
-  "Remove a decorator (experimental)."
-  (interactive)
+(defun red4e--decorator-read ()
+  "What is the (first) decorator of this method ?
+Could use redbaron."
+  (save-excursion
+    (beginning-of-defun)
+    (previous-line)
+    (s-trim (current-line))))
+
+(defun red4e--decorator-remove ()
+  "Do remove the first decorator."
   (save-excursion
     (save-restriction
       (beginning-of-defun)
       (previous-line)
-      (if (s-starts-with? "@" (current-line))
+      (if (s-starts-with? "@" (s-trim (current-line)))
           (progn
-            (let ((deleted-line (current-line)))
+            (let ((deleted-line (current-line))
+                  (kill-whole-line t))
               (kill-line)
-              (kill-line)
-              (save-buffer)
-              (message (concat "Removed " deleted-line))))
-        (message "You don't have a decorator.")
-        ))))
+              deleted-line
+              ))))))
+
+(defun red4e-decorator-remove ()
+  "Remove a decorator (experimental)."
+  (interactive)
+  (let ((decorator (red4e--decorator-remove)))
+    (save-buffer)
+    (if decorator
+        (message (concat "Removed " deleted-line))
+      (message "You don't have a decorator.")
+      )))
 
 (defun red4e-method-kill ()
   "Kill the current method definition and body."
