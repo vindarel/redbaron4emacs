@@ -447,12 +447,24 @@ Could use redbaron."
   (interactive)
   (let ((beg (save-excursion
                (red4e--beginning-of-defun-or-line)
-               (backward-paragraph)
+               (backward-paragraph) ;; include decorators. To do cleaner.
                (point)))
         (end (save-excursion
                (end-of-defun)
                (point))))
     (kill-region beg end)))
+
+(defun red4e-method-comment ()
+  "Comment the current method definition and body (with decorators)"
+  (interactive)
+  (let ((beg (save-excursion
+               (red4e--beginning-of-defun-or-line)
+               (backward-paragraph)
+               (point)))
+        (end (save-excursion
+               (end-of-defun)
+               (point))))
+    (comment-or-uncomment-region beg end)))
 
 ;; Methods for an imenu completion: basic, helm, counsel.
 (defun red4e-selection-default ()
@@ -484,6 +496,7 @@ Choose by setting `red4e-selection-method'."
   ("f" (red4e-rename-method) "rename the def")
   ("F" (red4e-rename-method-in-project) "rename the def in whole project")
   ("K" (red4e-method-kill) "Kill method")
+  ("c" (red4e-method-comment) "Comment method")
   ("@" (red4e-decorator-add) "Add a decorator")
   ("D" (red4e-decorator-remove) "Remove a decorator")
   ("i" (funcall red4e-selection-method) "imenu")
