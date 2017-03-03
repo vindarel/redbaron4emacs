@@ -442,28 +442,39 @@ Could use redbaron."
       (message "You don't have a decorator.")
       )))
 
+(defun red4e--beginning-of-method-point ()
+  ""
+  (let ((beg (save-excursion
+               (red4e--beginning-of-defun-or-line)
+               (backward-paragraph)  ;; include decorators. Could be cleaner.
+               (point))))
+    beg))
+
+(defun red4e--end-of-method-point ()
+  (let ((end (save-excursion
+               (end-of-defun)
+               (point))))
+    end))
+
+(defun red4e-method-copy ()
+  "Copy the current method definition and body."
+  (interactive)
+  (let ((beg (red4e--beginning-of-method-point))
+        (end (red4e--end-of-method-point)))
+    (copy-region-as-kill beg end)))
+
 (defun red4e-method-kill ()
   "Kill the current method definition and body."
   (interactive)
-  (let ((beg (save-excursion
-               (red4e--beginning-of-defun-or-line)
-               (backward-paragraph) ;; include decorators. To do cleaner.
-               (point)))
-        (end (save-excursion
-               (end-of-defun)
-               (point))))
+  (let ((beg (red4e--beginning-of-method-point))
+        (end (red4e--end-of-method-point)))
     (kill-region beg end)))
 
 (defun red4e-method-comment ()
   "Comment the current method definition and body (with decorators)"
   (interactive)
-  (let ((beg (save-excursion
-               (red4e--beginning-of-defun-or-line)
-               (backward-paragraph)
-               (point)))
-        (end (save-excursion
-               (end-of-defun)
-               (point))))
+  (let ((beg (red4e--beginning-of-method-point))
+        (end (red4e--end-of-method-point)))
     (comment-or-uncomment-region beg end)))
 
 ;; Methods for an imenu completion: basic, helm, counsel.
@@ -486,6 +497,16 @@ Choose by setting `red4e-selection-method'."
   "Ivy interface for imenu."
   (counsel-imenu))
 
+(defhydra red4e-hydra-method (:color red :columns 4)
+  "Current method:"
+  ("y" (red4e-method-copy) "Copy" :color blue)
+  ("f" (red4e-rename-method) "rename the def")
+  ("F" (red4e-rename-method-in-project) "rename the def in whole project")
+  ("k" (red4e-method-kill) "Kill method")
+  ("c" (red4e-method-comment) "Comment method")
+  ("i" (funcall red4e-selection-method) "imenu")
+  )
+
 (defhydra red4e-hydra (:color red :columns 4)
   "redbaron4emacs"
   ("a" (call-interactively 'red4e-add-arg) "add an argument")
@@ -493,10 +514,7 @@ Choose by setting `red4e-selection-method'."
   ("S" (red4e-rename-symbol-in-defun) "rename a symbol inside this method")
   ("r" (red4e-rm-arg) "delete an argument")
   ("l" (red4e-args-multi-line-toggle) "toggle args on multiple lines")
-  ("f" (red4e-rename-method) "rename the def")
-  ("F" (red4e-rename-method-in-project) "rename the def in whole project")
-  ("K" (red4e-method-kill) "Kill method")
-  ("c" (red4e-method-comment) "Comment method")
+  ("m" (red4e-hydra-method/body) "Current method…" :color blue)
   ("@" (red4e-decorator-add) "Add a decorator")
   ("D" (red4e-decorator-remove) "Remove a decorator")
   ("i" (funcall red4e-selection-method) "imenu")

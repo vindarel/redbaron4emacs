@@ -40,13 +40,17 @@ one line or each on its line).
 Renaming an argument will ask you  to search and replace it inside the
 method body.
 
-*** Rename the current method
+*** Current method: rename (in project), kill, comment, copy
+
+The  actions  for the  current  method  are  grouped under  the  hydra
+=red4e-hydra-method/body=, accessible from the main hydra.
+
+We can rename the current methode, just once or in the current project
+(using projectile), and kill, comment or copy it.
 
 : M-x red4e-rename-method
 or
 : M-x red4e-rename-method-in-project
-
-Or =f= and =F= respectively with the hydra.
 
 The second  choice will ask you  to search and replace  this method in
 the current project (based on [[https://github.com/bbatsov/projectile][projectile']]s =projectile-replace=).
@@ -58,10 +62,6 @@ the current project (based on [[https://github.com/bbatsov/projectile][projectil
 or =l= on the hydra ("lines").
 
 _Note:_ see also [[https://github.com/IvanMalison/multi-line][multi-line]] and [[https://github.com/snarfed/fillcode][fillcode]].
-
-*** Kill the whole current method
-
-=M-x red4e-method-kill= (experimental)
 
 *** Move around defs with imenu
 
@@ -91,6 +91,7 @@ If we  choose "@staticmethod", then  it removes "self" from  the method
 signature.
 
 This function doesn't use the redbaron python library.
+
 ** Motivation
 
 take the  string =def  foo(first, **kwargs, second=foo):  pass=, where
