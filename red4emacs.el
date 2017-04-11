@@ -196,6 +196,13 @@ If your args are on multiple lines, they will be written back in one. You'll nee
     (or args-one-line (red4e-args-multi-line))
   ))
 
+(defun red4e-add-args-kwargs ()
+  "Add *args, **kwargs to the method signature."
+  (interactive)
+  (let ((args (-concat (red4e--get-function-args)  '("*args" "**kwargs"))))
+    (red4e--write-args args)
+    (or args-one-line (red4e-args-multi-line))))
+
 (defun red4e--do-rename-arg (def argpos new)
   "Rename an argument. Call python function.
    - def: string, valid code 'def <name>(<args>): pass'
@@ -510,6 +517,7 @@ Choose by setting `red4e-selection-method'."
 (defhydra red4e-hydra (:color red :columns 4)
   "redbaron4emacs"
   ("a" (call-interactively 'red4e-add-arg) "add an argument")
+  ("*" (call-interactively 'red4e-add-args-kwargs) "add *args, **kwargs")
   ("n" (red4e-rename-arg) "rename an argument")
   ("S" (red4e-rename-symbol-in-defun) "rename a symbol inside this method")
   ("r" (red4e-rm-arg) "delete an argument")

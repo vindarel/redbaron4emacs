@@ -33,6 +33,11 @@ replaces the method definition with a new one.
 It respects args on many lines (well it isn't that clever, it's all in
 one line or each on its line).
 
+*** Add *args and **kwargs
+
+There is a shortcut to add those  two special args quickly: =*= on the
+hydra and otherwise =M-x red4e-add-args-kwargs=.
+
 *** Rename an argument
 
 : M-x red4e-rename-arg
