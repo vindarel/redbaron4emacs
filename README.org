@@ -115,3 +115,8 @@ Call that from within emacs, use with my snippet to add an argument to
 a function, and it becomes a bit simpler (no more movements around the
 code) and smarter (we manipulate =code=, not text with clunky regexps)
 to add an argument to a method.
+
+** See also
+
+- [[http://wikemacs.org/wiki/Python#emacs-traad.2C_easy_installation_and_use][emacs-traad]] for  real refactoring  (using Rope)  and straightforward
+  installation.
