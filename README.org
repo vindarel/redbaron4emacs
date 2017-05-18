@@ -26,6 +26,13 @@ The one command to know to see all options:
  <img src="demo.gif" </img>
 #+END_HTML
 
+Another example,  renaming an argument  and its occurences  inside the
+method body:
+
+#+BEGIN_HTML
+ <img src="rename-arg.gif" </img>
+#+END_HTML
+
 *** Add an argument
 Inside  a function,  call  =M-x red4e-add-arg  RET  whatever RET=.  It
 replaces the method definition with a new one.
