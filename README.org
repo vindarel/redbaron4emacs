@@ -89,8 +89,8 @@ prompt (=completing-read=), or choose between *helm* and *ivy*:
 *** Rename a symbol inside the current defun
 =S= in the hydra. It's a simple search and replace inside the method body.
 
-*** Add a decorator
-You can add a decorator to the current method:
+*** Add and remove a decorator
+You can *add a decorator* to the current method:
 : M-x red4e-decorator-add
 
 Or =@= with the hydra.
@@ -103,6 +103,8 @@ If we  choose "@staticmethod", then  it removes "self" from  the method
 signature.
 
 This function doesn't use the redbaron python library.
+
+Thus the *remove* (=D= with the hydra) only works with one-line decorators.
 
 ** Motivation
 
