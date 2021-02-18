@@ -83,8 +83,8 @@ another def and carry on using red4e.
 As an  imenu frontend, you can  stick with the default  and very basic
 prompt (=completing-read=), or choose between *helm* and *ivy*:
 
-: (setq red4e-selection-ivy)
-: (setq red4e-selection-helm)
+: (setq red4e-selection-method 'red4e-selection-ivy)
+: (setq red4e-selection-method 'red4e-selection-helm)
 
 *** Rename a symbol inside the current defun
 =S= in the hydra. It's a simple search and replace inside the method body.
