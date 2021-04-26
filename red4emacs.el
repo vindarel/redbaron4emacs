@@ -528,4 +528,4 @@ Choose by setting `red4e-selection-method'."
   ("i" (funcall red4e-selection-method) "imenu")
   )
 
-(provide 'red4e)
+(provide 'red4emacs)
